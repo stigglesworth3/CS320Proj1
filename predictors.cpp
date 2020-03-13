@@ -17,8 +17,9 @@ int gShare(vector<Branch> Bs, int numGHR)
 	int correct = 0;
 	for (int i=0; i<Bs.size(); i++)
 	{
-		int index = Bs[i].getAddr() ^ GHR;
-		index = index % 2048;
+		int index = Bs[i].getAddr() % 2048;
+		index = index ^ GHR;
+		//cout << i+1 << endl;
 		string outcome = Bs[i].getBehavior();
 		if (outcome == "T")
 		{
@@ -39,7 +40,7 @@ int gShare(vector<Branch> Bs, int numGHR)
 			{
 				table[index] = "WNT";
 			}
-			GHR << 1;
+			GHR = GHR << 1;
 			GHR = GHR | 0x00000001;
 			if (numGHR == 3)
 			{
@@ -51,31 +52,31 @@ int gShare(vector<Branch> Bs, int numGHR)
 			}
 			else if (numGHR == 5)
 			{
-				GHR = GHR & 0x0000003F;
+				GHR = GHR & 0x0000001F;
 			}
 			else if (numGHR == 6)
 			{
-				GHR = GHR & 0x0000007F;
+				GHR = GHR & 0x0000003F;
 			}
 			else if (numGHR == 7)
 			{
-				GHR = GHR & 0x000000FF;
+				GHR = GHR & 0x0000007F;
 			}
 			else if (numGHR == 8)
 			{
-				GHR = GHR & 0x000001FF;
+				GHR = GHR & 0x000000FF;
 			}	
 			else if (numGHR == 9)
 			{
-				GHR = GHR & 0x000003FF;
+				GHR = GHR & 0x000001FF;
 			}	
 			else if (numGHR == 10)
 			{
-				GHR = GHR & 0x000007FF;
+				GHR = GHR & 0x000003FF;
 			}
 			else if (numGHR == 11)
 			{
-				GHR = GHR & 0x00000FFF;
+				GHR = GHR & 0x000007FF;
 			}
 
 		}
@@ -98,7 +99,7 @@ int gShare(vector<Branch> Bs, int numGHR)
 			{
 				table[index] = "WT";
 			}
-			GHR << 1;
+			GHR = GHR << 1;
 			GHR = GHR | 0x00000000;
 			if (numGHR == 3)
 			{
@@ -110,31 +111,31 @@ int gShare(vector<Branch> Bs, int numGHR)
 			}
 			else if (numGHR == 5)
 			{
-				GHR = GHR & 0x0000003F;
+				GHR = GHR & 0x0000001F;
 			}
 			else if (numGHR == 6)
 			{
-				GHR = GHR & 0x0000007F;
+				GHR = GHR & 0x0000003F;
 			}
 			else if (numGHR == 7)
 			{
-				GHR = GHR & 0x000000FF;
+				GHR = GHR & 0x0000007F;
 			}
 			else if (numGHR == 8)
 			{
-				GHR = GHR & 0x000001FF;
+				GHR = GHR & 0x000000FF;
 			}	
 			else if (numGHR == 9)
 			{
-				GHR = GHR & 0x000003FF;
+				GHR = GHR & 0x000001FF;
 			}	
 			else if (numGHR == 10)
 			{
-				GHR = GHR & 0x000007FF;
+				GHR = GHR & 0x000003FF;
 			}
 			else if (numGHR == 11)
 			{
-				GHR = GHR & 0x00000FFF;
+				GHR = GHR & 0x000007FF;
 			}
 		}
 	}
@@ -233,7 +234,7 @@ int singleBimodal(vector<Branch> Bs, int tableSize)
 	string table[tableSize];
 	for (int j=0; j<tableSize; j++)
 	{
-		table[j] = "taken";
+		table[j] = "T";
 	}
 	unsigned long long mask;
 	if (tableSize == 16) //proper size and mask for each case
@@ -374,8 +375,7 @@ int main(int argc, char *argv[])
 	outFile << gShare(branches, 8) << "," << numBs << "; ";
 	outFile << gShare(branches, 9) << "," << numBs << "; ";
 	outFile << gShare(branches, 10) << "," << numBs << "; ";
-	outFile << gShare(branches, 11) << "," << numBs << "; " << endl;
-
+	outFile << gShare(branches, 11) << "," << numBs << "; " << endl;	
 
 	outFile.close();
   	return 0;
