@@ -5,8 +5,15 @@
 
 using namespace std;
 
-int BTB(vector<Branch> Bs)
+struct result
 {
+	int correctPred, predTrys;
+};
+typedef struct result Ret;
+
+Ret BTB(vector<Branch> Bs)
+{
+	int predTry = 0;
 	string biTable[512];
 	unsigned long long btbTable[512];
 	for (int j=0; j<512; j++)
@@ -26,6 +33,7 @@ int BTB(vector<Branch> Bs)
 		{
 			if (biTable[index] == "ST")
 			{
+				predTry++;
 				if (target == btbTable[index])
 				{
 					correct++;
@@ -38,6 +46,7 @@ int BTB(vector<Branch> Bs)
 				{
 					correct++;
 				}
+				predTry++;
 				btbTable[index] = target;
 				biTable[index] = "ST";
 			}
@@ -60,18 +69,31 @@ int BTB(vector<Branch> Bs)
 			}
 			else if (biTable[index] == "WT")
 			{
+				if (target == btbTable[index])
+				{
+					correct++;
+				}
+				predTry++;
 				biTable[index] = "WNT";
 			}
 			else if (biTable[index] == "ST")
 			{
+				if (target == btbTable[index])
+				{
+					correct++;
+				}
+				predTry++;
 				biTable[index] = "WT";
 			}
 		}
 	}
-	return correct;
+	Ret retval;
+	retval.correctPred = correct;
+	retval.predTrys = predTry;
+	return retval;
 }
 
-int numTaken(vector<Branch> Bs)
+/*int numTaken(vector<Branch> Bs)
 {
 	int taken = 0;
 	for (int i=0; i<Bs.size(); i++)
@@ -82,7 +104,7 @@ int numTaken(vector<Branch> Bs)
 		}
 	}
 	return taken;
-}
+}*/
 
 int tourn(vector<Branch> Bs)
 {
@@ -671,7 +693,9 @@ int main(int argc, char *argv[])
 	outFile << tourn(branches) << "," << numBs << ";" << endl;
 
 	//Branch Target Buffer
-	outFile << BTB(branches) << "," << numTaken(branches) << ";" << endl;
+	Ret BTBinfo;
+	BTBinfo = BTB(branches);
+	outFile << BTBinfo.correctPred << "," << BTBinfo.predTrys << ";" << endl;
 
 	outFile.close();
   	return 0;
