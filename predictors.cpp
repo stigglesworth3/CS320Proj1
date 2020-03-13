@@ -5,6 +5,85 @@
 
 using namespace std;
 
+int BTB(vector<Branch> Bs)
+{
+	string biTable[512];
+	unsigned long long btbTable[512];
+	for (int j=0; j<512; j++)
+	{
+		biTable[j] = "ST";
+		btbTable[j] = 0x00000000;
+	}	
+	
+	int correct = 0;
+	for (int i=0; i<Bs.size(); i++)
+	{
+		int index = Bs[i].getAddr() & 0x000001FF;
+		string outcome = Bs[i].getBehavior();
+		unsigned long long target = Bs[i].getTarget();
+		
+		if (outcome == "T")
+		{
+			if (biTable[index] == "ST")
+			{
+				if (target == btbTable[index])
+				{
+					correct++;
+				}
+				btbTable[index] = target;
+			}
+			else if (biTable[index] == "WT")
+			{
+				if (target == btbTable[index])
+				{
+					correct++;
+				}
+				btbTable[index] = target;
+				biTable[index] = "ST";
+			}
+			else if (biTable[index] == "WNT")
+			{
+				biTable[index] = "WT";
+				btbTable[index] = target;
+			}
+			else if (biTable[index] == "SNT")
+			{
+				biTable[index] = "WNT";
+				btbTable[index] = target;
+			}
+		}
+		else if (outcome == "NT")
+		{
+			if (biTable[index] == "WNT")
+			{
+				biTable[index] = "SNT";
+			}
+			else if (biTable[index] == "WT")
+			{
+				biTable[index] = "WNT";
+			}
+			else if (biTable[index] == "ST")
+			{
+				biTable[index] = "WT";
+			}
+		}
+	}
+	return correct;
+}
+
+int numTaken(vector<Branch> Bs)
+{
+	int taken = 0;
+	for (int i=0; i<Bs.size(); i++)
+	{
+		if (Bs[i].getBehavior() == "T")
+		{
+			taken++;
+		}
+	}
+	return taken;
+}
+
 int tourn(vector<Branch> Bs)
 {
 	string gTable[2048];
@@ -590,6 +669,9 @@ int main(int argc, char *argv[])
 
 	//Tournament
 	outFile << tourn(branches) << "," << numBs << ";" << endl;
+
+	//Branch Target Buffer
+	outFile << BTB(branches) << "," << numTaken(branches) << ";" << endl;
 
 	outFile.close();
   	return 0;
