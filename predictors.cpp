@@ -13,7 +13,6 @@ typedef struct result Ret;
 
 Ret BTB(vector<Branch> Bs)
 {
-	int predTry = 0;
 	string biTable[512];
 	unsigned long long btbTable[512];
 	for (int j=0; j<512; j++)
@@ -23,6 +22,7 @@ Ret BTB(vector<Branch> Bs)
 	}	
 	
 	int correct = 0;
+	int predTry = 0;
 	for (int i=0; i<Bs.size(); i++)
 	{
 		int index = Bs[i].getAddr() & 0x000001FF;
@@ -69,19 +69,11 @@ Ret BTB(vector<Branch> Bs)
 			}
 			else if (biTable[index] == "WT")
 			{
-				if (target == btbTable[index])
-				{
-					correct++;
-				}
 				predTry++;
 				biTable[index] = "WNT";
 			}
 			else if (biTable[index] == "ST")
 			{
-				if (target == btbTable[index])
-				{
-					correct++;
-				}
 				predTry++;
 				biTable[index] = "WT";
 			}
@@ -92,19 +84,6 @@ Ret BTB(vector<Branch> Bs)
 	retval.predTrys = predTry;
 	return retval;
 }
-
-/*int numTaken(vector<Branch> Bs)
-{
-	int taken = 0;
-	for (int i=0; i<Bs.size(); i++)
-	{
-		if (Bs[i].getBehavior() == "T")
-		{
-			taken++;
-		}
-	}
-	return taken;
-}*/
 
 int tourn(vector<Branch> Bs)
 {
