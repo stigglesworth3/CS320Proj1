@@ -5,6 +5,217 @@
 
 using namespace std;
 
+int tourn(vector<Branch> Bs)
+{
+	string gTable[2048];
+	string biTable[2048];
+	string sTable[2048];
+	unsigned long long GHR = 0;
+
+	for (int j=0; j<2048; j++)
+	{
+		gTable[j] = "ST";
+		biTable[j] = "ST";
+		sTable[j] = "SG";
+	}
+	int correct = 0;
+	for (int i=0; i<Bs.size(); i++)
+	{
+		int gIndex = Bs[i].getAddr() % 2048;
+		gIndex = gIndex ^ GHR;
+		int bsIndex = Bs[i].getAddr() & 0x000007FF;
+		string gOutcome;
+		string bOutcome;
+		string sChoice;
+		string tOutcome = Bs[i].getBehavior();
+
+		gOutcome = gTable[gIndex];
+		bOutcome = biTable[bsIndex];
+		sChoice = sTable[bsIndex];
+
+		if (sChoice == "SG" || sChoice == "WG")
+		{
+			if (tOutcome == "T")
+			{
+				if (gOutcome == "ST")
+				{
+					correct++;
+				}
+				else if (gOutcome == "WT")
+				{
+					correct++;
+					gTable[gIndex] = "ST";
+				}
+				else if (gOutcome == "WNT")
+				{
+					gTable[gIndex] = "WT";
+				}
+				else if (gOutcome == "SNT")
+				{
+					gTable[gIndex] = "WNT";
+				}
+				GHR = GHR << 1;
+				GHR = GHR | 0x00000001;
+				GHR = GHR & 0x000007FF;
+				if (bOutcome == "WT")
+				{
+					biTable[bsIndex] = "ST";
+				}
+				else if (bOutcome == "WNT")
+				{
+					biTable[bsIndex] = "WT";
+				}
+				else if (bOutcome == "SNT")
+				{
+					biTable[bsIndex] = "WNT";
+				}
+			}
+			else if (tOutcome == "NT")
+			{
+				if (gOutcome == "SNT")
+				{
+					correct++;
+				}
+				else if (gOutcome == "WNT")
+				{
+					correct++;
+					gTable[gIndex] = "SNT";
+				}
+				else if (gOutcome == "WT")
+				{
+					gTable[gIndex] = "WNT";
+				}
+				else if (gOutcome == "ST")
+				{
+					gTable[gIndex] = "WT";
+				}
+				GHR = GHR << 1;
+				GHR = GHR | 0x00000000;
+				GHR = GHR & 0x000007FF;
+				if (bOutcome == "WNT")
+				{
+					biTable[bsIndex] = "SNT";
+				}
+				else if (bOutcome == "WT")
+				{
+					biTable[bsIndex] = "WNT";
+				}
+				else if (bOutcome == "ST")
+				{
+					biTable[bsIndex] = "WT";
+				}
+			}
+		}
+		else if (sChoice == "SB" || sChoice == "WB")
+		{
+			if (tOutcome == "T")
+			{
+				if (bOutcome == "ST")
+				{
+					correct++;
+				}
+				else if (bOutcome == "WT")
+				{
+					correct++;
+					biTable[bsIndex] = "ST";
+				}
+				else if (bOutcome == "WNT")
+				{
+					biTable[bsIndex] = "WT";
+				}
+				else if (bOutcome == "SNT")
+				{
+					biTable[bsIndex] = "WNT";
+				}
+				if (gOutcome == "WT")
+				{
+					gTable[gIndex] = "ST";
+				}
+				else if (gOutcome == "WNT")
+				{
+					gTable[gIndex] = "WT";
+				}
+				else if (gOutcome == "SNT")
+				{
+					gTable[gIndex] = "WNT";
+				}
+				GHR = GHR << 1;
+				GHR = GHR | 0x00000001;
+				GHR = GHR & 0x000007FF;
+			}
+			else if (tOutcome == "NT")
+			{
+				if (bOutcome == "SNT")
+				{
+					correct++;
+				}
+				else if (bOutcome == "WNT")
+				{
+					correct++;
+					biTable[bsIndex] = "SNT";
+				}
+				else if (bOutcome == "WT")
+				{
+					biTable[bsIndex] = "WNT";
+				}
+				else if (bOutcome == "ST")
+				{
+					biTable[bsIndex] = "WT";
+				}
+				if (gOutcome == "WNT")
+				{
+					gTable[gIndex] = "SNT";
+				}
+				else if (gOutcome == "WT")
+				{
+					gTable[gIndex] = "WNT";
+				}
+				else if (gOutcome == "ST")
+				{
+					gTable[gIndex] = "WT";
+				}
+				GHR = GHR << 1;
+				GHR = GHR | 0x00000000;
+				GHR = GHR & 0x000007FF;
+			}
+		}
+		if (((gOutcome == "ST" || gOutcome == "WT") && (bOutcome == "SNT" || bOutcome == "WNT")) || ((gOutcome == "SNT" || gOutcome == "WNT") && (bOutcome == "ST" || bOutcome == "WT")))
+		{
+			if (((gOutcome == "ST" || gOutcome == "WT") && tOutcome == "T") || ((gOutcome == "SNT" || gOutcome == "WNT") && tOutcome == "NT"))
+			{
+				if (sChoice == "WG")
+				{
+					sTable[bsIndex] = "SG";
+				}
+				else if (sChoice == "WB")
+				{
+					sTable[bsIndex] = "WG";
+				}
+				else if (sChoice == "SB")
+				{
+					sTable[bsIndex] = "WB";
+				}
+			}
+			else
+			{
+				if (sChoice == "WB")
+				{
+					sTable[bsIndex] = "SB";
+				}
+				else if (sChoice == "WG")
+				{
+					sTable[bsIndex] = "WB";
+				}
+				else if (sChoice == "SG")
+				{
+					sTable[bsIndex] = "WG";
+				}
+			}
+		}
+	}
+	return correct;
+}
+
 int gShare(vector<Branch> Bs, int numGHR)
 {
 	unsigned long long GHR = 0;
@@ -375,7 +586,10 @@ int main(int argc, char *argv[])
 	outFile << gShare(branches, 8) << "," << numBs << "; ";
 	outFile << gShare(branches, 9) << "," << numBs << "; ";
 	outFile << gShare(branches, 10) << "," << numBs << "; ";
-	outFile << gShare(branches, 11) << "," << numBs << "; " << endl;	
+	outFile << gShare(branches, 11) << "," << numBs << "; " << endl;
+
+	//Tournament
+	outFile << tourn(branches) << "," << numBs << ";" << endl;
 
 	outFile.close();
   	return 0;
