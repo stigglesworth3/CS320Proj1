@@ -1,1 +1,3 @@
-# CS320Proj1
+Kyle Stigler
+kstigle1
+B00704209
