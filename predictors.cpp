@@ -17,7 +17,7 @@ Ret BTB(vector<Branch> Bs)
 	unsigned long long btbTable[512];
 	for (int j=0; j<512; j++)
 	{
-		biTable[j] = "ST";
+		biTable[j] = "T";
 		btbTable[j] = 0x00000000;
 	}	
 	
@@ -31,51 +31,35 @@ Ret BTB(vector<Branch> Bs)
 		
 		if (outcome == "T")
 		{
-			if (biTable[index] == "ST")
+			if (biTable[index] == "T")
 			{
 				predTry++;
-				if (target == btbTable[index])
+				if (btbTable[index] == target)
 				{
 					correct++;
 				}
 				btbTable[index] = target;
 			}
-			else if (biTable[index] == "WT")
+			else if (biTable[index] == "NT")
 			{
-				if (target == btbTable[index])
+				if (btbTable[index] == Bs[i].getAddr + 4)
 				{
 					correct++;
 				}
-				predTry++;
 				btbTable[index] = target;
-				biTable[index] = "ST";
-			}
-			else if (biTable[index] == "WNT")
-			{
-				biTable[index] = "WT";
-				btbTable[index] = target;
-			}
-			else if (biTable[index] == "SNT")
-			{
-				biTable[index] = "WNT";
-				btbTable[index] = target;
+				biTable[index] = "T";
 			}
 		}
 		else if (outcome == "NT")
 		{
-			if (biTable[index] == "WNT")
-			{
-				biTable[index] = "SNT";
-			}
-			else if (biTable[index] == "WT")
+			if (biTable[index] == "T")
 			{
 				predTry++;
-				biTable[index] = "WNT";
-			}
-			else if (biTable[index] == "ST")
-			{
-				predTry++;
-				biTable[index] = "WT";
+				if (btbTable[index] == target)
+				{
+					correct++;
+				}
+
 			}
 		}
 	}
