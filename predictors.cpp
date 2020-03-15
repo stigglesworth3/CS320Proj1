@@ -649,7 +649,7 @@ int main(int argc, char *argv[])
 	outFile << singleBimodal(branches, 256) << "," << numBs << "; ";
 	outFile << singleBimodal(branches, 512) << "," << numBs << "; ";
 	outFile << singleBimodal(branches, 1024) << "," << numBs << "; ";
-	outFile << singleBimodal(branches, 2048) << "," << numBs << "; " << endl;
+	outFile << singleBimodal(branches, 2048) << "," << numBs << ";" << endl;
 
 	//Two Bit Bimodal
 	outFile << doubleBimodal(branches, 16) << "," << numBs << "; ";
@@ -658,7 +658,7 @@ int main(int argc, char *argv[])
 	outFile << doubleBimodal(branches, 256) << "," << numBs << "; ";
 	outFile << doubleBimodal(branches, 512) << "," << numBs << "; ";
 	outFile << doubleBimodal(branches, 1024) << "," << numBs << "; ";
-	outFile << doubleBimodal(branches, 2048) << "," << numBs << "; " << endl;
+	outFile << doubleBimodal(branches, 2048) << "," << numBs << ";" << endl;
 
 	//gShare
 	outFile << gShare(branches, 3) << "," << numBs << "; ";
@@ -668,6 +668,8 @@ int main(int argc, char *argv[])
 	outFile << gShare(branches, 7) << "," << numBs << "; ";
 	outFile << gShare(branches, 8) << "," << numBs << "; ";
 	outFile << gShare(branches, 9) << "," << numBs << "; ";
+	outFile << gShare(branches, 10) << "," << numBs << "; ";
+	outFile << gShare(branches, 11) << "," << numBs << ";" << endl;
 
 	//Tournament
 	outFile << tourn(branches) << "," << numBs << ";" << endl;
