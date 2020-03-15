@@ -634,7 +634,7 @@ int main(int argc, char *argv[])
 	int correctPs = 0;
 
 	ofstream outFile;
-	outFile.open("output.txt");
+	outFile.open(argv[2]);
 
 	//Always taken
 	outFile << alwaysTaken(branches) << "," << numBs << ";" << endl;

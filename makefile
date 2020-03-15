@@ -10,6 +10,6 @@ clean:
 	rm -rf $(PROG)
 	rm -rf *.o
 run: all
-	./$(PROG) short_trace1.txt
+	./$(PROG) short_trace1.txt output.txt
 memcheck: all
 	valgrind -v --leak-check=full ./$(PROG)
