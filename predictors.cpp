@@ -42,7 +42,7 @@ Ret BTB(vector<Branch> Bs)
 			}
 			else if (biTable[index] == "NT")
 			{
-				if (btbTable[index] == Bs[i].getAddr + 4)
+				if (target == Bs[i].getAddr()+4)
 				{
 					correct++;
 				}
@@ -59,7 +59,14 @@ Ret BTB(vector<Branch> Bs)
 				{
 					correct++;
 				}
-
+				biTable[index] = "NT";
+			}
+			else if (biTable[index] == "NT")
+			{
+				if (Bs[i].getAddr()+4 == target)
+				{
+					//anything?
+				}
 			}
 		}
 	}
@@ -186,6 +193,18 @@ int tourn(vector<Branch> Bs)
 				else if (bOutcome == "WNT")
 				{
 					biTable[bsIndex] = "WT";
+				}
+				else if (bOutcome == "SNT")
+				{
+					biTable[bsIndex] = "WNT";
+				}
+				if (gOutcome == "WT")
+				{
+					gTable[gIndex] = "ST";
+				}
+				else if (gOutcome == "WNT")
+				{
+					gTable[gIndex] = "WT";
 				}
 				else if (bOutcome == "SNT")
 				{
@@ -649,17 +668,15 @@ int main(int argc, char *argv[])
 	outFile << gShare(branches, 7) << "," << numBs << "; ";
 	outFile << gShare(branches, 8) << "," << numBs << "; ";
 	outFile << gShare(branches, 9) << "," << numBs << "; ";
-	outFile << gShare(branches, 10) << "," << numBs << "; ";
-	outFile << gShare(branches, 11) << "," << numBs << "; " << endl;
 
 	//Tournament
 	outFile << tourn(branches) << "," << numBs << ";" << endl;
 
-	//Branch Target Buffer
+	//Target Branch Buffer
 	Ret BTBinfo;
 	BTBinfo = BTB(branches);
 	outFile << BTBinfo.correctPred << "," << BTBinfo.predTrys << ";" << endl;
 
 	outFile.close();
-  	return 0;
+	return 0;
 }
